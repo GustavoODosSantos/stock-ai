@@ -138,11 +138,16 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
 
     # RSI
     out["rsi_14"] = _rsi(c, 14)
+    out["rsi14"] = out["rsi_14"]    # <-- REQUIRED for Model()
+
 
     # ATR / TR
     tr, atr_14 = _atr(h, l, c, 14)
     out["tr"] = tr
     out["atr_14"] = atr_14
+    out["atr14"] = out["atr_14"]    # <-- REQUIRED for Model()
+
+
 
     # ADX + DI
     adx_14, di_plus_14, di_minus_14 = _adx_di(h, l, c, 14)
@@ -195,5 +200,15 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
         "ret_1","sma_20","sma_50","sma_200","ema_12","ema_26","macd_line",
         "rsi_14","atr_14","adx_14","bb_mid_20","bb_width_20","stdev_10"
     ]).reset_index(drop=True)
+
+    # ---------- TREND CLASSIFICATION ----------
+    def classify_trend(row):
+        if row["close"] > row["sma_20"] and row["close"] > row["sma_50"]:
+            return "bullish"
+        if row["close"] < row["sma_20"] and row["close"] < row["sma_50"]:
+            return "bearish"
+        return "neutral"
+
+    out["trend"] = out.apply(classify_trend, axis=1)
 
     return out
