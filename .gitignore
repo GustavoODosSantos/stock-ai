@@ -1,1 +1,21 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# VS Code settings
+.vscode/
+
+# Data files (optional - only ignore if you don't want CSVs in repo)
+# data/
+# *.csv
+
+# Generated reports and charts
+*.png
+*.pdf
